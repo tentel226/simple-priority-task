@@ -31,7 +31,16 @@ export function loadTasks(): Task[] {
 
 export function saveTasks(tasks: Task[]) {
   if (typeof window === "undefined") return;
+  if (tasks.length === 0) {
+    window.localStorage.removeItem(STORAGE_KEY);
+    return;
+  }
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+export function clearTasksStorage() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(STORAGE_KEY);
 }
 
 export function newId(): string {

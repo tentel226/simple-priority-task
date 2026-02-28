@@ -10,6 +10,7 @@ import {
   saveTasks,
   sortTasksForList,
   upsertTask,
+  clearTasksStorage,
 } from "@/lib/tasks";
 
 export default function HomePage() {
@@ -52,6 +53,13 @@ export default function HomePage() {
     setTasks((prev) => deleteTask(prev, task.id));
   };
 
+  const onDeleteAll = () => {
+    const ok = window.confirm("すべてのタスクを削除しますか？");
+    if (!ok) return;
+    clearTasksStorage();
+    setTasks([]);
+  };
+
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
@@ -74,21 +82,38 @@ export default function HomePage() {
       </p>
 
       <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-        <input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="検索（タスク名・メモ）"
-          aria-label="検索（タスク名・メモ）"
-          style={{
-            width: "100%",
-            maxWidth: 360,
-            padding: "8px 10px",
-            borderRadius: 10,
-            border: "1px solid #ddd",
-            fontSize: 14,
-          }}
-        />
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="検索（タスク名・メモ）"
+            aria-label="検索（タスク名・メモ）"
+            style={{
+              width: "100%",
+              maxWidth: 360,
+              padding: "8px 10px",
+              borderRadius: 10,
+              border: "1px solid #ddd",
+              fontSize: 14,
+            }}
+          />
+          <button
+            onClick={onDeleteAll}
+            disabled={tasks.length === 0}
+            style={{
+              padding: "8px 10px",
+              borderRadius: 10,
+              border: "1px solid #ddd",
+              background: "white",
+              cursor: tasks.length === 0 ? "not-allowed" : "pointer",
+              fontSize: 14,
+              opacity: tasks.length === 0 ? 0.6 : 1,
+            }}
+          >
+            全削除
+          </button>
+        </div>
         <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14 }}>
           <input
             type="checkbox"
